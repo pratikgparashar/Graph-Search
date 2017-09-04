@@ -13,16 +13,11 @@ import java.util.*;
 class NurseryGrid{
     int lizard_count;
     int[][] grid_map;
+    boolean solved;
     NurseryGrid(int lz_count,int n, int [][] map){
         lizard_count = 0;
-//        grid_map = new int[n][n];
-//        for(int i=0;i<n;i++){
-//            for(int j=0;j<n;j++){
-//                grid_map[i][j] = 0;
-//            }
-//        }
-//        grid_map = new int [][] {{2, 0, 2}, {0, 0, 0}, {2, 0, 2}};
         grid_map = map;
+        solved =  false;
 ;    }
 }
 
@@ -38,7 +33,8 @@ public class Homework {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
 //        System.out.println("hello");
-        BufferedReader br =  new BufferedReader(new InputStreamReader(System.in));
+//        BufferedReader br =  new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br =  new BufferedReader(new FileReader("./input.txt"));
         String algorithm = br.readLine();
         dimension = Integer.parseInt(br.readLine());
         total_lizard_count = Integer.parseInt(br.readLine());
@@ -53,23 +49,19 @@ public class Homework {
             }
             grid_map[i] = num_row;
         }
-        System.out.println("hello2");
+//        System.out.println("hello2");
         NurseryGrid grid =  new NurseryGrid(0,dimension, grid_map);
-        solveGrid(grid,0,0);
+        grid = solveGrid(grid,0,0);
+        printSolution(grid);
     }
     
     static NurseryGrid solveGrid(NurseryGrid grid,int position_i , int position_j){
         int i, j;
         boolean can_placed;
         int[]  next_cord;
-        System.out.println("Call : " + ++czz);
+//        System.out.println("Call : " + ++czz);
         if (grid.lizard_count == total_lizard_count){
-            for(int n=0;n<dimension;n++){
-                for(int p=0;p<dimension;p++){
-                    System.out.print(grid.grid_map[n][p] + "  ");
-                }
-                System.out.println("\n");
-            }
+            grid.solved =  true;
             return grid;
         }
         i = position_i;
@@ -107,21 +99,21 @@ public class Homework {
     static boolean canLizardBePlaced(NurseryGrid grid, int current_i, int current_j){
         int i, j;
         if(grid.grid_map[current_i][current_j] == 2) return false;
-        /* Check this row on left side */
+        /*left side */
         for (i = current_j; i >= 0; i--)
             if(grid.grid_map[current_i][i] == 2)
                 break;
             else if (grid.grid_map[current_i][i] == 1)
                 return false;
  
-        /* Check upper diagonal on left side */
+        /*upper diagonal left */
         for (i=current_i, j=current_j; i>=0 && j>=0; i--, j--)
             if (grid.grid_map[i][j] == 2)
                 break;
             else if (grid.grid_map[i][j] == 1)
                 return false;
  
-        /* Check lower diagonal on left side */
+        /* lower diagonal left*/
         for (i=current_i, j=current_j; j>=0 && i<dimension; i++, j--)
             if (grid.grid_map[i][j] == 2)
                 break;
@@ -151,4 +143,27 @@ public class Homework {
        return cords;
     }
     
+    static void printSolution(NurseryGrid grid){
+        if(grid.solved){
+            System.out.println("OK");
+            for(int n=0;n<dimension;n++){
+                for(int p=0;p<dimension;p++){
+                    System.out.print(grid.grid_map[n][p]);
+                }
+                System.out.println("\n");
+            }
+        }
+        else{
+            System.out.println("FAIL");
+        }
+    }
+    
+    static void printTree(NurseryGrid grid){
+        for(int n=0;n<dimension;n++){
+                for(int p=0;p<dimension;p++){
+                    System.out.print(grid.grid_map[n][p]);
+                }
+                System.out.println("\n");
+            }
+    }
 }
