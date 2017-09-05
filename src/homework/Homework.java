@@ -30,6 +30,10 @@ public class Homework {
     static int total_lizard_count = 5; 
     static int dimension = 3;
     static double czz = 0;
+    static int[] tree_count;
+    static int [] col_lizard_count;
+    static HashMap<Integer,ArrayList<Integer>> tree_map =new HashMap<Integer,ArrayList<Integer>>();
+    
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
 //        System.out.println("hello");
@@ -39,12 +43,32 @@ public class Homework {
         dimension = Integer.parseInt(br.readLine());
         total_lizard_count = Integer.parseInt(br.readLine());
         int [][] grid_map = new int[dimension][dimension];
+        tree_count =  new int[dimension];
+        col_lizard_count =  new int[dimension];
+        Arrays.fill(col_lizard_count,0);
+        ArrayList<Integer> temp =  new ArrayList<Integer>();
         for (int i = 0; i < dimension; i++) {
             String line = br.readLine();
             String[] row = line.split("");
             int[] num_row = new int[dimension];
+            int type = 0;
+            tree_count[i] = 0;
             for(int k = 0; k< dimension; k++){
-                num_row[k] = Integer.parseInt(row[k]);
+                type = Integer.parseInt(row[k]);
+                num_row[k] = type;
+                if (type == 2){
+                    tree_count[k] += 1;
+                    temp = tree_map.get(k);
+                    if(temp != null){
+                        temp.add(i);
+                        tree_map.put(k,temp);
+                    }
+                    else{
+                        ArrayList<Integer> new_list = (new ArrayList<Integer>());
+                        new_list.add(i);
+                        tree_map.put(k,new_list);
+                    }
+                }
                 
             }
             grid_map[i] = num_row;
@@ -76,7 +100,11 @@ public class Homework {
             if (can_placed){
                 grid.grid_map[i][j] = 1;
                 grid.lizard_count += 1;
+                col_lizard_count[j] += 1;
+                if(shouldMoveAhead(i,j,grid.lizard_count))
+                    break;
                 next_cord = nextPosition(i,j);
+//                printTree(grid);
                 NurseryGrid new_g = solveGrid(grid,next_cord[0],next_cord[1]);
                 if(new_g.lizard_count == total_lizard_count){
                     return new_g;
@@ -84,6 +112,7 @@ public class Homework {
                 else{
                     grid.grid_map[i][j] = 0;
                     grid.lizard_count -= 1;
+                    col_lizard_count[j] -= 1;
                 }
             }
             else{
@@ -98,6 +127,7 @@ public class Homework {
     
     static boolean canLizardBePlaced(NurseryGrid grid, int current_i, int current_j){
         int i, j;
+//        System.out.println("Trying to Place I =" + current_i + " J = " + current_j);
         if(grid.grid_map[current_i][current_j] == 2) return false;
         /*left side */
         for (i = current_j; i >= 0; i--)
@@ -131,7 +161,12 @@ public class Homework {
     
     static int [] nextPosition(int i,int j){
        int[] cords = new int[2];
-       if (i < dimension - 1){
+//       if (col_lizard_count[j] >= tree_count[j] + 1){
+//           cords[0] = 0;
+//           cords[1] = ++j;
+//       }
+//       else 
+           if (i < dimension - 1){
            cords[0] = ++i;
            cords[1] = j;
        } 
@@ -139,8 +174,25 @@ public class Homework {
            cords[0] = 0;
            cords[1] = ++j;
        }
-
+//        System.out.println("Next Cord : "+ cords[0]+" - "+ cords[1]);
        return cords;
+    }
+    
+    static boolean shouldMoveAhead(int row, int col, int current_lizard_count){
+        int next_trees = 0;
+        int remaining_columns = dimension - col - 1 ;
+        if(tree_count[col] > 0){       
+            Integer[] col_trees = tree_map.get(col).toArray(new Integer[tree_count[col]]);
+            for(int col_index : col_trees){
+                if(col_index > col)
+                    next_trees += 1;
+            }
+        }
+        for (int i = col + 1; i < dimension; i++) {
+           next_trees += tree_count[i]; 
+        }
+        
+        return total_lizard_count - current_lizard_count >= next_trees + remaining_columns ? false : true ;
     }
     
     static void printSolution(NurseryGrid grid){
