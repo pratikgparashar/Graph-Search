@@ -246,13 +246,13 @@ public class Homework {
             for(int p=0;p<dimension;p++){
                 if(grid.grid_map[n][p] == 1)
 //                    System.out.println(" NP : " + n + " " + p);
-                    r.add(n);
-                    c.add(p);
+                {   r.add(n);
+                    c.add(p);}
             }
         }
         for(int n=0; n<total_lizards; n++){
             System.out.println(r.get(n) +" , "+ c.get(n));
-            if(canLizardBePlaced(grid, r.get(n), c.get(n)))
+            if(canLizardBePlaced(grid, r.get(n), c.get(n)) && n != 0)
                 return false;
         }
         return true;
