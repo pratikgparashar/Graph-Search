@@ -14,15 +14,15 @@ shoot their tongues through the trees nor can you move a lizard into the same pl
 such, a tree will block any lizard from eating another lizard if it is in the path. Additionally, the
 tree will block you from moving the lizard to that location.
 
-# Input: The file input.txt in the current directory of your program will be formatted as follows:
+Input: The file input.txt in the current directory of your program will be formatted as follows:
 
-# First line: instruction of which algorithm to use: BFS, DFS or SA
-# Second line: strictly positive 32-bit integer n, the width and height of the square nursery
-# Third line: strictly positive 32-bit integer p, the number of baby lizards
-# Next n lines: the n x n nursery, one file line per nursery row (to show you where the trees are).
-#               It will have a 0 where there is nothing, and a 2 where there is a tree.
+First line: instruction of which algorithm to use: BFS, DFS or SA
+Second line: strictly positive 32-bit integer n, the width and height of the square nursery
+Third line: strictly positive 32-bit integer p, the number of baby lizards
+Next n lines: the n x n nursery, one file line per nursery row (to show you where the trees are).
+              It will have a 0 where there is nothing, and a 2 where there is a tree.
 
-# Example Input :
+Example Input :
 SA
 8
 9
@@ -35,7 +35,7 @@ SA
 00000000
 00000000
 
-# One possible correct output.txt is:
+One possible correct output.txt is:
 OK
 00000100
 10000000
